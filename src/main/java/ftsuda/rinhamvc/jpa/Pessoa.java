@@ -1,4 +1,4 @@
-package ftsuda.rinhamvc;
+package ftsuda.rinhamvc.jpa;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -17,11 +17,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@ToString
+@NoArgsConstructor
 public class Pessoa implements Persistable<UUID> {
 
     private static final String STACK_SEPARATOR = ",";
@@ -67,7 +67,5 @@ public class Pessoa implements Persistable<UUID> {
             this.stackDb = String.join(STACK_SEPARATOR, this.stack);
         }
     }
-
-
 
 }

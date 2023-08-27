@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.util.UriComponentsBuilder;
+import ftsuda.rinhamvc.jpa.Pessoa;
+import ftsuda.rinhamvc.jpa.PessoaRepository;
+import ftsuda.rinhamvc.redis.PessoaCache;
+import ftsuda.rinhamvc.redis.PessoaCacheRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 
@@ -33,22 +37,27 @@ public class PessoaController {
     // TODO: Removendo camada Services pois é uma aplicação simples.
     private final PessoaRepository repository;
 
+    private final PessoaCacheRepository cacheRepository;
+
     // TODO: Cache local simples para veritar ida ao BD em caso de apelidos já cadastrados
     // Em cluster, não compartilha informações entre as instâncias, mas estatisticamente pode reduzir a carga ao BD
     // Idealmente, deve ser um cache externo compartilhado (ex: Redis)
     private Set<String> apelidosUsados = new TreeSet<>();
 
-    public PessoaController(PessoaRepository repository) {
+    public PessoaController(PessoaRepository repository, PessoaCacheRepository cacheRepository) {
         this.repository = repository;
+        this.cacheRepository = cacheRepository;
     }
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Pessoa pessoa, UriComponentsBuilder ucb) {
-        if (apelidosUsados.contains(pessoa.getApelido())) {
+        final String apelido = pessoa.getApelido();
+        if (cacheRepository.existsById(apelido)) {
+            log.debug("Apelido {} encontrado em cache", apelido);
             return ResponseEntity.unprocessableEntity().build();
         }
         repository.save(pessoa);
-        apelidosUsados.add(pessoa.getApelido());
+        cacheRepository.save(new PessoaCache(apelido));
         return ResponseEntity
                 .created(ucb.pathSegment("pessoas", "{id}").buildAndExpand(pessoa.getId().toString()).toUri()).build();
     }
