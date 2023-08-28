@@ -63,11 +63,13 @@ public class PessoaController {
     }
 
     @GetMapping("/{id}")
+    // @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public ResponseEntity<?> findById(@PathVariable UUID id) {
         return repository.findById(id).map(p -> ResponseEntity.ok(p)).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
+    // @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public List<Pessoa> search(@RequestParam("t") String t) {
         return repository.findBySearchTerm(t);
     }
@@ -81,7 +83,7 @@ public class PessoaController {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public void handlePostError(Exception ex) {
-        log.error(ex.getMessage());
+        // log.error(ex.getMessage());
     }
 
     /**
@@ -93,7 +95,7 @@ public class PessoaController {
     @ExceptionHandler({WebExchangeBindException.class, ValidationException.class, DecodingException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleInvalidRequestError(Exception ex) {
-        log.error(ex.getMessage());
+        // log.error(ex.getMessage());
     }
 
 }

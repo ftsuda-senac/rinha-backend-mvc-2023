@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@RedisHash("apelido-cache")
+@RedisHash
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

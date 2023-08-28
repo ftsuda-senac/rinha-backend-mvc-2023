@@ -11,7 +11,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import redis.embedded.RedisServer;
 
-//// https://medium.com/@wahyudi.hh/embedded-redis-for-spring-boot-integration-test-e0d6b164b8fa
+// https://medium.com/@wahyudi.hh/embedded-redis-for-spring-boot-integration-test-e0d6b164b8fa
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Profile("dev")

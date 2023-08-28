@@ -10,8 +10,8 @@ public interface PessoaRepository extends JpaRepository<Pessoa, UUID> {
     // @formatter:off
     @Query(
         nativeQuery = true,
-        value = "SELECT DISTINCT * FROM pessoa WHERE (nome || ';' || apelido || ';' || stack_db) ILIKE '%'||:termoBusca||'%' LIMIT 50")
- // @formatter:on
+        value = "SELECT * FROM pessoa WHERE busca_helper ILIKE '%'||:termoBusca||'%' LIMIT 50")
+    // @formatter:on
     List<Pessoa> findBySearchTerm(String termoBusca);
 
 }

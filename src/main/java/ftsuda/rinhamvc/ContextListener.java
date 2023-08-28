@@ -20,7 +20,6 @@ public class ContextListener {
     public void handleContextRefreshed(ContextRefreshedEvent event) {
         log.debug("Deleting all Redis entries {}", event.toString());
         redisConnFactory.getConnection().serverCommands().flushAll();
-
     }
 
 
